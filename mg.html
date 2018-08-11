@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mg</title>
+    <style type="text/css">
+        .main{
+            width: 600px;
+            height: 600px;
+            background-color: #c5c5c5;
+        }
+        .box{
+            float: left;
+            width: 30px;
+            height: 30px;
+
+            box-sizing: border-box;
+            background-color: #c1c1c1;
+        }
+        .path{
+            background-color:#c8c8c8; 
+        }
+        .person{
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: 18px;
+            left:18px;
+            background-color: red;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="main" id="main">
+        
+        <div class="person" id="person"></div>
+    </div>
+    <button onClick=start() id="btn">run</button>
+    <button onClick=refresh()>refresh</button>
+    speed(1-10):<input type="text" name="" id="speed">
+</body>
+
+<script type="text/javascript">
+    
+    function refresh(){
+        location.reload();
+    }
+    function start(){
+        var btn = document.getElementById("btn")
+        btn.disabled=true;
+        for (var i = 0; i < n; i++) {
+            book[i]=[];
+        for (var j = 0; j <n ; j++) {
+              book[i][j]=0;
+        }
+        }
+        book[0][0]=1;
+        path = [[0,0]];
+        dfs(0,0,0,1);
+        console.log(path);
+
+        //run
+        var index =0
+        //clearInterval(timeinter);
+        var person = document.getElementById("person")
+        var speed = document.getElementById("speed").value?document.getElementById("speed").value:5;
+        var basesp = 1000;
+        var rspeed = basesp/speed;
+        style = window.getComputedStyle(person , null);
+        timeinter= setInterval(function(){
+
+            //左右
+            if (index < path.length-1) {
+
+
+            if (path[index][0] == path[index+1][0]) {
+                //左
+                if (path[index][1] > path[index+1][1]) {
+                    var left = style.left.substr(0,style.left.length-2);
+                    person.style.left = parseInt(left)-30+"px";       //实现obj对象的移动效果
+
+                   
+                }else if(path[index][1] < path[index+1][1]){
+                    var left = style.left.substr(0,style.left.length-2);
+                    person.style.left = parseInt(left)+30+"px";       //实现obj对象的移动效果
+
+                    
+                }
+            }
+            //上下
+            else{
+                //下
+                if (path[index][0] > path[index+1][0]) {
+                     var top = style.top.substr(0,style.top.length-2);
+                    person.style.top = parseInt(top)-30+"px";       //实现obj对象的移动效果
+                }else if(path[index][0] < path[index+1][0]){
+                    var top = style.top.substr(0,style.top.length-2);
+                    person.style.top = parseInt(top)+30+"px";       //实现obj对象的移动效果
+                }
+            }
+              }
+            index++;
+        },rspeed);
+
+
+        
+    }
+    var mg = [];
+    var book = [];
+    var n =20;
+    for (var i = 0; i < n; i++) {
+            mg[i] =[];book[i]=[];
+        for (var j = 0; j <n ; j++) {
+              mg[i][j] = 15;book[i][j]=0;
+        }
+    }
+    book[0][0]=1;
+
+    var end = {
+        x:i-1,
+        y:j-1
+    }
+
+    var path = [[0,0]];
+    var flag = 0;
+    var nextfx =[
+         [0,1],
+         [1,0],
+         [0,-1],
+         [-1,0]
+    ];
+
+
+    dfs(0,0,0,0);
+    // path = wall(path);
+     init();
+    // reder(mg);
+    mg[0][0]-=4;
+    mg[n-1][n-1]-=1;
+
+    console.log(mg);
+
+    function init() {
+        var main = document.getElementById('main');
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < n; j++) {
+                var odiv=document.createElement("div");             //创建一个div
+                odiv.className="box";                    //div的class为Box
+
+                switch(mg[i][j]){
+                case 2:
+                    odiv.style.borderBottom= '1px solid #111111'; 
+                    break;
+                case 3:
+                    odiv.style.borderRight= '1px solid #111111';
+                    odiv.style.borderBottom= '1px solid #111111';
+                    break; 
+                case 1:
+                    odiv.style.borderRight= '1px solid #111111';
+                    break;
+                case 4:
+                    odiv.style.borderLeft= '1px solid #111111';
+                    break;
+                case 5:
+                    odiv.style.borderRight= '1px solid #111111';
+                    odiv.style.borderLeft= '1px solid #111111';
+                    break;
+                case 6:
+                    odiv.style.borderBottom= '1px solid #111111';
+                    odiv.style.borderLeft= '1px solid #111111';
+                    break;
+                case 7:
+                    odiv.style.borderRight= '1px solid #111111';
+                    odiv.style.borderLeft= '1px solid #111111';
+                    odiv.style.borderBottom= '1px solid #111111';
+                    break;
+                case 8:
+                    odiv.style.borderTop= '1px solid #111111';
+                    break;
+                case 9:
+                    odiv.style.borderRight= '1px solid #111111';
+                    odiv.style.borderTop= '1px solid #111111';
+                    break;
+                case 10:
+                    odiv.style.borderTop= '1px solid #111111';
+                    odiv.style.borderBottom= '1px solid #111111'; 
+                    break; 
+                case 12:
+                    odiv.style.borderLeft= '1px solid #111111';
+                    odiv.style.borderTop= '1px solid #111111'; 
+                    break; 
+                case 13:
+                    odiv.style.borderRight= '1px solid #111111';
+                    odiv.style.borderTop= '1px solid #111111'; 
+                    odiv.style.borderLeft= '1px solid #111111'; 
+                    break; 
+                case 14:
+                    odiv.style.borderLeft= '1px solid #111111';
+                    odiv.style.borderTop= '1px solid #111111'; 
+                    odiv.style.borderBottom= '1px solid #111111'; 
+                    break;
+                case 11:
+                    odiv.style.borderRight= '1px solid #111111';
+                    odiv.style.borderTop= '1px solid #111111'; 
+                    odiv.style.borderBottom= '1px solid #111111'; 
+                    break;
+                case 0:
+                    break;
+                default:
+                    odiv.style.borderLeft= '1px solid #111111';
+                    odiv.style.borderRight= '1px solid #111111';
+                    odiv.style.borderTop= '1px solid #111111'; 
+                    odiv.style.borderBottom= '1px solid #111111';
+                    break;
+                }
+
+
+                main.appendChild(odiv);            //在div内创建一个span
+                //document.body.appendChild(Odiv);        //在body内创建一个div   
+            }
+            
+        }
+    }
+
+    //dfs
+    function dfs(x,y,step,type){
+        //打乱走的顺序
+       
+       if (type == 0) {
+         var ran = parseInt(Math.random()*4);
+        [nextfx[ran], nextfx[3-ran]]=[nextfx[3-ran], nextfx[ran]];
+       }
+        
+ 
+
+        if (x == end.x && y == end.y) {
+            if (type==1) { flag = 1;}
+            return ;
+        }
+
+        if (flag == 1) return;
+
+        for (var k = 0; k <=3; k++) {
+            var tx = x+nextfx[k][0];
+            var ty = y+nextfx[k][1];
+            //是否出界
+            if (tx< 0 || tx >i-1 || ty <0 || ty >j-1) continue;
+            if (type == 1) {
+             //是否障碍
+              //2下 
+              var ertmp = mg[x][y].toString(2);
+              var er= ertmp;
+              for(var p=0; p<(4 - ertmp.length);p++){
+                 er="0"+er;
+              }
+              if (nextfx[k][0] ==1 && nextfx[k][1] ==0 && er.slice(2,3) == '1') {
+                    //if (k==3) {path.push([x,y]);}
+                    continue;
+              } 
+              //8上 
+              if (nextfx[k][0] ==-1 && nextfx[k][1] == 0 && er.slice(0,1) == '1') {
+                //if (k==3) {path.push([x,y]);}
+                continue;
+              }
+              //1右 
+              if (nextfx[k][0] ==0 && nextfx[k][1] == 1 && er.slice(-1) == '1') {
+                //if (k==3) {path.push([x,y]);}
+                continue;
+              }
+              //4左 
+              if (nextfx[k][0] ==0 && nextfx[k][1] == -1 && er.slice(1,2) == '1') {
+                //if (k==3) {path.push([x,y]);}
+                continue;
+              }
+
+            }
+
+           
+            
+            //是否已经走过
+            if (book[tx][ty] == 0) {
+                book[tx][ty] = 1;
+                if(type == 1){
+                    //动画画线
+                    // var a = document.getElementById("main").getElementsByTagName("div")
+                    // var num = tx*20+ty;
+                    // console.log(tx,ty)                    
+                    // a[num].style.backgroundColor = 'blue';
+
+                    //a[num].style.backgroundColor = 'blue';
+                    //sleep(1000);
+                    path.push([tx,ty]);
+                }else{
+                     //推到墙
+                    wall([x,y],[tx,ty]);
+                }
+                //是否走投无路，走投无路再次入队
+               
+                
+                dfs(tx,ty,step+1,type);
+                
+                if (flag == 1 && type ==1) return;
+                path.push([x,y])
+                //回溯
+                
+                //book[tx][ty] = 0;
+            }
+              
+            
+            
+            
+        }
+        return ;
+    }
+
+
+    function wall(pre,now){
+                 //入
+                //左右
+                w=15;
+                if(pre[0] == now[0]){
+                    //后退
+                    if (pre[1] > now[1]) {
+                        //右边无墙
+                        w-=1;
+                        mg[pre[0]][pre[1]]-=4;
+                    }else{
+                        w-=4;
+                        mg[pre[0]][pre[1]]-=1;
+                    }
+                }else{
+                    //往上
+                    if (pre[0] > now[0]) {
+                        //上边无墙
+                        w-=2;
+                        mg[pre[0]][pre[1]]-=8;
+                    }else{
+                        w-=8;
+                        mg[pre[0]][pre[1]]-=2;
+                    }
+                } 
+
+                mg[now[0]][now[1]] = w;
+    }
+
+
+
+
+   
+
+ 
+
+
+</script>
+</html>
